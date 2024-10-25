@@ -2,37 +2,84 @@
 #include <ArduinoSTL.h>
 #include <SPI.h>
 #include <SD.h>
+#include <String>
+#include <array>
 
-File configFile;
+// Import Class Files
+#include "Motors.h"
 
+// Pin Vars
 int m1p1 = 2;
 int m1p2 = 3;
+int m1spd = 8;
+
+// Name of the config file (DO NOT TOUCH)
+String fileName = "config.txt";
+
+// Debug Mode (Turn off if no serial out)
+bool debugMode = true;
+
+// SD Card
+File config;
+
+// Initilize Motors
+Motors car(m1p1, m1p2, m1spd, 23, 24, 25);
 
 void setup() {
-  pinMode(m1p1, OUTPUT);
-  pinMode(m1p2, OUTPUT);
-  pinMode(8, OUTPUT);
-  /*
-  Serial.begin(9600);
-  if (!SD.begin(53)) {
-    Serial.println("There was an error");
-    while (1);
+  if (debugMode){
+    Serial.begin(9600);
   }
-  Serial.println("Success");
 
-  configFile = SD.open("config.txt");
-  if (configFile) {
-    while (configFile.available()){
-      Serial.println(configFile.readString());
+
+  // SD Card
+  if (debugMode){
+    if (!SD.begin(53)) {
+      Serial.println("SD Card failed to Init");
+    } else {
+      Serial.println("SD Card Init Successful");
     }
-  } else {
-    Serial.println("There was an error");
   }
-  */
-}
+  config = SD.open(fileName);
+  if (debugMode){
+    if (config) {
+      Serial.println("Successfully opened " + fileName);
+    } else {
+      Serial.println("Could not open " + fileName);
+    }
+  }
 
+  int lineCount = 0;
+  while (config.available()) {
+    String line = config.readStringUntil('\n');
+    lineCount++;
+  }
+  if (debugMode){
+    Serial.println(lineCount);
+  }
+
+  config.close();
+  config = SD.open(fileName);
+  
+  if (debugMode){
+    if (config) {
+      Serial.println("Successfully opened " + fileName);
+    } else {
+      Serial.println("Could not open " + fileName);
+    }
+  }
+
+  String instructions[lineCount];
+  for (int i = 0; i <= lineCount; i++) {
+    instructions[i] = config.readStringUntil('\n');
+  }
+  if (debugMode){
+    for (int i = 0; i <= lineCount - 1; i++) {
+      Serial.println(instructions[i]);
+    }
+  }
+
+
+}
 void loop() {
-  digitalWrite(m1p1, HIGH);
-  digitalWrite(m1p2, LOW);
-  analogWrite(8, 255);
+  car.f(100);
 }

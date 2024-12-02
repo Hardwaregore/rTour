@@ -26,17 +26,127 @@ Motors::Motors(int m1p1, int m1p2, int m1spd, int m2p1, int m2p2, int m2spd) {
 
 }
 
-void Motors::f(int spd) {
+bool Motors::f(int spd, int distance, int until) {
 
-    // Set Motor 1
-    digitalWrite(pinM1p1, HIGH);
-    digitalWrite(pinM1p2, LOW);
-    analogWrite(pinM1spd, spd);
+    if (distance > until || distance == -1) {
 
-    // Set Motor 2
+        // Set Motor 1
+        digitalWrite(pinM1p1, HIGH);
+        digitalWrite(pinM1p2, LOW);
+        analogWrite(pinM1spd, spd);
 
-    digitalWrite(pinM2p1, HIGH);
-    digitalWrite(pinM2p2, LOW);
-    analogWrite(pinM2spd, spd);
+        // Set Motor 2
+
+        digitalWrite(pinM2p1, HIGH);
+        digitalWrite(pinM2p2, LOW);
+        analogWrite(pinM2spd, spd);
+
+        return true;
+
+    } else {
+
+        // Set Motor 1
+        digitalWrite(pinM1p1, HIGH);
+        digitalWrite(pinM1p2, LOW);
+        analogWrite(pinM1spd, 0);
+
+        // Set Motor 2
+
+        digitalWrite(pinM2p1, HIGH);
+        digitalWrite(pinM2p2, LOW);
+        analogWrite(pinM2spd, 0);
+
+        return false;
+    }
     
+}
+
+bool Motors::l(int numRotationsM1, int numRotationsM2) {
+    if (numRotationsM1/1800 == 1 && numRotationsM2/1800 == 1) {
+        // Set Motor 1
+        digitalWrite(pinM1p1, HIGH);
+        digitalWrite(pinM1p2, LOW);
+        analogWrite(pinM1spd, 0);
+
+        // Set Motor 2
+
+        digitalWrite(pinM2p1, HIGH);
+        digitalWrite(pinM2p2, LOW);
+        analogWrite(pinM2spd, 0);
+
+        return false;
+    } else {
+        // Set Motor 1
+        digitalWrite(pinM1p1, HIGH);
+        digitalWrite(pinM1p2, LOW);
+        analogWrite(pinM1spd, 250);
+
+        // Set Motor 2
+
+        digitalWrite(pinM2p1, LOW);
+        digitalWrite(pinM2p2, HIGH);
+        analogWrite(pinM2spd, 250);
+
+        return true;
+    }
+}
+
+bool Motors::r(int numRotationsM1, int numRotationsM2) {
+    if (numRotationsM1/1800 == 1 && numRotationsM2/1800 == 1) {
+        // Set Motor 1
+        digitalWrite(pinM1p1, HIGH);
+        digitalWrite(pinM1p2, LOW);
+        analogWrite(pinM1spd, 0);
+
+        // Set Motor 2
+
+        digitalWrite(pinM2p1, HIGH);
+        digitalWrite(pinM2p2, LOW);
+        analogWrite(pinM2spd, 0);
+
+        return false;
+    } else {
+        // Set Motor 1
+        digitalWrite(pinM1p1, LOW);
+        digitalWrite(pinM1p2, HIGH);
+        analogWrite(pinM1spd, 250);
+
+        // Set Motor 2
+
+        digitalWrite(pinM2p1, HIGH);
+        digitalWrite(pinM2p2, LOW);
+        analogWrite(pinM2spd, 250);
+
+        return true;
+    }
+}
+
+bool Motors::b(int spd, int numRotationsAvg, int until) {
+    if (numRotationsAvg < until) {
+        // Set Motor 1
+        digitalWrite(pinM1p1, LOW);
+        digitalWrite(pinM1p2, HIGH);
+        analogWrite(pinM1spd, spd);
+
+        // Set Motor 2
+
+        digitalWrite(pinM2p1, LOW);
+        digitalWrite(pinM2p2, HIGH);
+        analogWrite(pinM2spd, spd);
+
+        return true;
+    } else {
+        // Set Motor 1
+        digitalWrite(pinM1p1, HIGH);
+        digitalWrite(pinM1p2, LOW);
+        analogWrite(pinM1spd, 0);
+
+        // Set Motor 2
+
+        digitalWrite(pinM2p1, HIGH);
+        digitalWrite(pinM2p2, LOW);
+        analogWrite(pinM2spd, 0);
+
+        return false;
+    }
 }

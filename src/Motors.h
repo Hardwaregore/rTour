@@ -12,10 +12,10 @@ private:
 
 public:
     Motors(int m1p1, int m1p2, int m1spd, int m2p1, int m2p2, int m2spd); // Constructor
-    void f(int spd); // Go forwards 
-    void b(); // Go Backwards
-    void l(); // Go Left
-    void r(); // Go Right
+    bool f(int spd, int distance, int until); // Go forwards 
+    bool b(int spd, int numRotationsAvg, int until); // Go Backwards
+    bool l(int numRotationsM1, int numRotationsM2); // Go Left
+    bool r(int numRotationsM1, int numRotationsM2); // Go Right
 
 };
 

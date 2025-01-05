@@ -170,7 +170,7 @@ void loop() {
     if (instruction[0] == 'f') {
       // Define variables
       int until;
-      double circumfrence = 229.4148;
+      // double circumfrence = 229.4148;
 
       // Set until var
       sscanf(instruction.c_str(), "f %d", &until);
@@ -179,29 +179,15 @@ void loop() {
         Serial.println("Used " + String(until) + " as until value");
       }
 
-      double numRotationsNeeded = until / circumfrence;
+      double numRotationsNeeded = until / 250;
 
       for (int i = 0; i < ceil(numRotationsNeeded); i++) {
         m1c = 0;
         m2c = 0;
-        
-        int avg = (m1c + m2c) / 2;
-        double distance = avg / (2750.0);
-        if (debugMode) {
-          Serial.println("Average: " + String(avg) + " (M1: " + String(m1c) + ", M2: " + String(m2c) + ") | Revolutions: " + String(distance));
-        }
-
-        double numToGo;
-        if (numRotationsNeeded >= 1) {
-          numToGo = 1;
-          numRotationsNeeded -= 1;
-        } else {
-          numToGo = numRotationsNeeded;
-        }
 
         bool exited = false;
         while (!exited) {
-          exited = car.f(m1c, m2c, numToGo);
+          exited = car.f(m1c, m2c);
         }
 
         delay(1000);

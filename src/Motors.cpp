@@ -27,9 +27,10 @@ Motors::Motors(int m1p1, int m1p2, int m1spd, int m2p1, int m2p2, int m2spd, boo
 
 }
 
-bool Motors::f(long m1c, long m2c, double until) {
+bool Motors::f(long m1c, long m2c) {
     int avg = (m1c + m2c) / 2;
     double distance = avg / (2750.0);
+    double until = 1.105;
     if (debugMode) {
         Serial.println("Average: " + String(avg) + " (M1: " + String(m1c) + ", M2: " + String(m2c) + ") | Revolutions: " + String(distance));
     }

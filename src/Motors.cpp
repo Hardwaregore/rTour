@@ -27,15 +27,12 @@ Motors::Motors(int m1p1, int m1p2, int m1spd, int m2p1, int m2p2, int m2spd, boo
 
 }
 
-bool Motors::f(long m1c, long m2c, int until) {
-    // Formula: 
+bool Motors::f(long m1c, long m2c, double until) {
     int avg = (m1c + m2c) / 2;
     double distance = avg / (2750.0);
     if (debugMode) {
         Serial.println("Average: " + String(avg) + " (M1: " + String(m1c) + ", M2: " + String(m2c) + ") | Revolutions: " + String(distance));
     }
-    // Circumfrence = 229.414803528mm
-    // if (distance >= (until / 229.4148)) {
     if (distance >= (until)) {
 
         // Set Motor 1
@@ -67,11 +64,10 @@ bool Motors::f(long m1c, long m2c, int until) {
 
         return false;
     }
-    
 }
 
 bool Motors::l(int numRotationsM1, int numRotationsM2) {
-    if (numRotationsM1 / 1800 == 1 && numRotationsM2 / 1800 == 1) {
+    if (numRotationsM1 / 1550 == 1 && numRotationsM2 / 1550 == 1) {
         // Set Motor 1
         digitalWrite(pinM1p1, HIGH);
         digitalWrite(pinM1p2, LOW);

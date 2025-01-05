@@ -6,6 +6,7 @@
 #include <Wire.h>
 #include <Adafruit_VL53L0X.h>
 #include <vector>
+#include <cmath>
 
 // Import Class Files
 #include "Motors.h"
@@ -142,7 +143,7 @@ void loop() {
     if (begin) {
       break;
     } else if (init) {
-      if (distance > sensitivity + 10) {
+      if (distance > sensitivity + 10 || distance == -1) {
         begin = true;
         Serial.println("Set Begin to true");
       }
@@ -167,14 +168,43 @@ void loop() {
     m1c = 0; m2c = 0;
 
     if (instruction[0] == 'f') {
+      // Define variables
       int until;
+      double circumfrence = 229.4148;
+
+      // Set until var
       sscanf(instruction.c_str(), "f %d", &until);
+
       if (debugMode) {
         Serial.println("Used " + String(until) + " as until value");
       }
-      bool exited = false;
-      while (!exited) {
-        exited = car.f(m1c, m2c, until);
+
+      double numRotationsNeeded = until / circumfrence;
+
+      for (int i = 0; i < ceil(numRotationsNeeded); i++) {
+        m1c = 0;
+        m2c = 0;
+        
+        int avg = (m1c + m2c) / 2;
+        double distance = avg / (2750.0);
+        if (debugMode) {
+          Serial.println("Average: " + String(avg) + " (M1: " + String(m1c) + ", M2: " + String(m2c) + ") | Revolutions: " + String(distance));
+        }
+
+        double numToGo;
+        if (numRotationsNeeded >= 1) {
+          numToGo = 1;
+          numRotationsNeeded -= 1;
+        } else {
+          numToGo = numRotationsNeeded;
+        }
+
+        bool exited = false;
+        while (!exited) {
+          exited = car.f(m1c, m2c, numToGo);
+        }
+
+        delay(1000);
       }
     } else if (instruction[0] == 'l') {
       bool exited = false;

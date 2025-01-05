@@ -28,7 +28,7 @@ Motors::Motors(int m1p1, int m1p2, int m1spd, int m2p1, int m2p2, int m2spd, boo
 
 }
 
-bool Motors::f(long m1c, long m2c, int speed, bool special) {
+bool Motors::f(long m1c, long m2c, bool special) {
     int avg = (m1c + m2c) / 2;
     double distance = avg / (2750.0);
     double until = 1.102;
@@ -57,12 +57,12 @@ bool Motors::f(long m1c, long m2c, int speed, bool special) {
             // Set Motor 2
             digitalWrite(pinM2p1, HIGH);
             digitalWrite(pinM2p2, LOW);
-            analogWrite(pinM2spd, speed);
+            analogWrite(pinM2spd, 255);
 
             // Set Motor 1
             digitalWrite(pinM1p1, HIGH);
             digitalWrite(pinM1p2, LOW);
-            analogWrite(pinM1spd, speed - 6);
+            analogWrite(pinM1spd, 255 - 6);
 
             return false;
         }
@@ -89,14 +89,14 @@ bool Motors::f(long m1c, long m2c, int speed, bool special) {
 
             digitalWrite(pinM2p1, HIGH);
             digitalWrite(pinM2p2, LOW);
-            analogWrite(pinM2spd, speed);
+            analogWrite(pinM2spd, 255);
 
             // delay(100);
 
             // Set Motor 1
             digitalWrite(pinM1p1, HIGH);
             digitalWrite(pinM1p2, LOW);
-            analogWrite(pinM1spd, speed - 6);
+            analogWrite(pinM1spd, 255 - 6);
 
             return false;
         }

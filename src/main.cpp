@@ -183,7 +183,7 @@ void loop() {
 
         bool exited = false;
         while (!exited) {
-          exited = car.f(m1c, m2c, speed, true);
+          exited = car.f(m1c, m2c, true);
         }
       } else {
         double numRotationsNeeded = until / 250;
@@ -197,7 +197,7 @@ void loop() {
 
           bool exited = false;
           while (!exited) {
-            exited = car.f(m1c, m2c, speed, false);
+            exited = car.f(m1c, m2c, false);
           }
 
           delay(1000);

@@ -16,6 +16,7 @@ public:
     bool f(long m1c, long m2c, bool special); // Go forwards 
     bool l(int numRotationsM1, int numRotationsM2); // Go Left
     bool r(int numRotationsM1, int numRotationsM2); // Go Right
+    bool b(long m1c, long m2c); // Go backwards (Special)
 
 };
 

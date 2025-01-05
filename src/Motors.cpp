@@ -33,12 +33,11 @@ bool Motors::f(long m1c, long m2c, bool special) {
     double until = 1.105;
     double specialUntil = 0.7;
     if (debugMode) {
-        Serial.println("Average: " + String(avg) + " (M1: " + String(m1c) + ", M2: " + String(m2c) + ") | Revolutions: " + String(distance));
+        Serial.println("Average: " + String(avg) + " (M1: " + String(m1c) + ", M2: " + String(m2c) + ")");
     }
 
     if (special) {
         if (distance >= (specialUntil)) {
-
             // Set Motor 1
             digitalWrite(pinM1p1, HIGH);
             digitalWrite(pinM1p2, LOW);
@@ -52,9 +51,7 @@ bool Motors::f(long m1c, long m2c, bool special) {
             return true;
     
         } else {
-
             // Set Motor 2
-
             digitalWrite(pinM2p1, HIGH);
             digitalWrite(pinM2p2, LOW);
             analogWrite(pinM2spd, 255);
@@ -162,5 +159,45 @@ bool Motors::r(int numRotationsM1, int numRotationsM2) {
         analogWrite(pinM2spd, 255);
 
         return true;
+    }
+}
+
+bool Motors::b (long m1c, long m2c) {
+    int avg = (m1c + m2c) / 2;
+    double distance = avg / (2750.0);
+    double specialUntil = 0.7;
+    if (debugMode) {
+        Serial.println("Average: " + String(avg) + " (M1: " + String(m1c) + ", M2: " + String(m2c) + ")");
+    }
+
+    if (distance >= (specialUntil)) {
+        // Set Motor 1
+        digitalWrite(pinM1p1, LOW);
+        digitalWrite(pinM1p2, HIGH);
+        analogWrite(pinM1spd, 0);
+
+        // Set Motor 2
+        digitalWrite(pinM2p1, LOW);
+        digitalWrite(pinM2p2, HIGH);
+        analogWrite(pinM2spd, 0);
+
+        return true;
+
+    } else {
+
+        // Set Motor 2
+
+        digitalWrite(pinM2p1, LOW);
+        digitalWrite(pinM2p2, HIGH);
+        analogWrite(pinM2spd, 255);
+
+        // delay(100);
+
+        // Set Motor 1
+        digitalWrite(pinM1p1, LOW);
+        digitalWrite(pinM1p2, HIGH);
+        analogWrite(pinM1spd, 250);
+
+        return false;
     }
 }

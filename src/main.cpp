@@ -175,11 +175,11 @@ void loop() {
       // Set until var
       sscanf(instruction.c_str(), "f %d", &until);
 
-      if (debugMode) {
-        Serial.println("Used " + String(until) + " as until value");
-      }
-
       if (until == 170) {
+        if (debugMode) {
+          Serial.println("\"" + instruction + "\" is a special instruction! Used " + String(until) + " as until value");
+        }
+
         bool exited = false;
         while (!exited) {
           exited = car.f(m1c, m2c, true);
@@ -214,6 +214,15 @@ void loop() {
           Serial.println("Average: " + String((m1c + m2c) / 2) + " (M1: " + String(m1c) + ", M2: " + String(m2c) + ")");
         }
         exited = !car.r(m1c, m2c);
+      }
+    } else if (instruction[0] == 'b') {
+      if (debugMode) {
+        Serial.println("\"" + instruction + "\" is a special instruction! Used " + String(170) + " as until value");
+      }
+
+      bool exited = false;
+      while (!exited) {
+        exited = car.b(m1c, m2c);
       }
     } else if (instruction[0] == 'e') {
       while (true) {

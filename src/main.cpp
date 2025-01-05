@@ -36,6 +36,7 @@ String fileName = "config.txt";
 
 // Debug Mode (Turn off if no serial out)
 bool debugMode = true;
+bool verboseOutput = false;
 
 // SD Card
 File config;
@@ -44,7 +45,7 @@ File config;
 Adafruit_VL53L0X lidar = Adafruit_VL53L0X();
 
 // Initilize Motors
-Motors car(m1p1, m1p2, m1spd, m2p1, m2p2, m2spd, debugMode);
+Motors car(m1p1, m1p2, m1spd, m2p1, m2p2, m2spd, debugMode, verboseOutput);
 
 int lineCount;
 std::vector<String> instructions;
@@ -170,10 +171,10 @@ void loop() {
     if (instruction[0] == 'f') {
       // Define variables
       int until;
-      // double circumfrence = 229.4148;
+      int speed;
 
       // Set until var
-      sscanf(instruction.c_str(), "f %d", &until);
+      sscanf(instruction.c_str(), "f %d %d", &until, &speed);
 
       if (until == 170) {
         if (debugMode) {
@@ -182,10 +183,13 @@ void loop() {
 
         bool exited = false;
         while (!exited) {
-          exited = car.f(m1c, m2c, true);
+          exited = car.f(m1c, m2c, speed, true);
         }
       } else {
         double numRotationsNeeded = until / 250;
+        if (debugMode) {
+          Serial.println("Will more forwards 250mm " + String(numRotationsNeeded) + " times");
+        }
 
         for (int i = 0; i < ceil(numRotationsNeeded); i++) {
           m1c = 0;
@@ -193,7 +197,7 @@ void loop() {
 
           bool exited = false;
           while (!exited) {
-            exited = car.f(m1c, m2c, false);
+            exited = car.f(m1c, m2c, speed, false);
           }
 
           delay(1000);
@@ -202,7 +206,7 @@ void loop() {
     } else if (instruction[0] == 'l') {
       bool exited = false;
       while (!exited) {
-        if (debugMode) {
+        if (debugMode && verboseOutput) {
           Serial.println("Average: " + String((m1c + m2c) / 2) + " (M1: " + String(m1c) + ", M2: " + String(m2c) + ")");
         }
         exited = !car.l(m1c, m2c);
@@ -210,7 +214,7 @@ void loop() {
     } else if (instruction[0] == 'r') {
       bool exited = false;
       while (!exited) {
-        if (debugMode) {
+        if (debugMode && verboseOutput) {
           Serial.println("Average: " + String((m1c + m2c) / 2) + " (M1: " + String(m1c) + ", M2: " + String(m2c) + ")");
         }
         exited = !car.r(m1c, m2c);

@@ -4,7 +4,7 @@
 #include <SPI.h>
 
 
-Motors::Motors(int m1p1, int m1p2, int m1spd, int m2p1, int m2p2, int m2spd, bool useDebugMode) {
+Motors::Motors(int m1p1, int m1p2, int m1spd, int m2p1, int m2p2, int m2spd, bool useDebugMode, bool doVerboseOutput) {
 
     // Assign Pin Vars
     pinM1p1 = m1p1;
@@ -14,6 +14,7 @@ Motors::Motors(int m1p1, int m1p2, int m1spd, int m2p1, int m2p2, int m2spd, boo
     pinM2p2 = m2p2;
     pinM2spd = m2spd;
     debugMode = useDebugMode;
+    verboseOutput = doVerboseOutput;
 
     // Initilize Motor 1 Pins
     pinMode(pinM1p1, OUTPUT);
@@ -27,10 +28,10 @@ Motors::Motors(int m1p1, int m1p2, int m1spd, int m2p1, int m2p2, int m2spd, boo
 
 }
 
-bool Motors::f(long m1c, long m2c, bool special) {
+bool Motors::f(long m1c, long m2c, int speed, bool special) {
     int avg = (m1c + m2c) / 2;
     double distance = avg / (2750.0);
-    double until = 1.105;
+    double until = 1.102;
     double specialUntil = 0.7;
     if (debugMode) {
         Serial.println("Average: " + String(avg) + " (M1: " + String(m1c) + ", M2: " + String(m2c) + ")");
@@ -42,7 +43,9 @@ bool Motors::f(long m1c, long m2c, bool special) {
             digitalWrite(pinM1p1, HIGH);
             digitalWrite(pinM1p2, LOW);
             analogWrite(pinM1spd, 0);
-    
+
+            delay(50);
+
             // Set Motor 2
             digitalWrite(pinM2p1, HIGH);
             digitalWrite(pinM2p2, LOW);
@@ -54,14 +57,12 @@ bool Motors::f(long m1c, long m2c, bool special) {
             // Set Motor 2
             digitalWrite(pinM2p1, HIGH);
             digitalWrite(pinM2p2, LOW);
-            analogWrite(pinM2spd, 255);
-
-            // delay(100);
+            analogWrite(pinM2spd, speed);
 
             // Set Motor 1
             digitalWrite(pinM1p1, HIGH);
             digitalWrite(pinM1p2, LOW);
-            analogWrite(pinM1spd, 250);
+            analogWrite(pinM1spd, speed - 6);
 
             return false;
         }
@@ -73,6 +74,8 @@ bool Motors::f(long m1c, long m2c, bool special) {
         digitalWrite(pinM1p2, LOW);
         analogWrite(pinM1spd, 0);
 
+        delay(50);
+        
         // Set Motor 2
         digitalWrite(pinM2p1, HIGH);
         digitalWrite(pinM2p2, LOW);
@@ -86,14 +89,14 @@ bool Motors::f(long m1c, long m2c, bool special) {
 
             digitalWrite(pinM2p1, HIGH);
             digitalWrite(pinM2p2, LOW);
-            analogWrite(pinM2spd, 255);
+            analogWrite(pinM2spd, speed);
 
             // delay(100);
 
             // Set Motor 1
             digitalWrite(pinM1p1, HIGH);
             digitalWrite(pinM1p2, LOW);
-            analogWrite(pinM1spd, 250);
+            analogWrite(pinM1spd, speed - 6);
 
             return false;
         }

@@ -179,18 +179,25 @@ void loop() {
         Serial.println("Used " + String(until) + " as until value");
       }
 
-      double numRotationsNeeded = until / 250;
-
-      for (int i = 0; i < ceil(numRotationsNeeded); i++) {
-        m1c = 0;
-        m2c = 0;
-
+      if (until == 170) {
         bool exited = false;
         while (!exited) {
-          exited = car.f(m1c, m2c);
+          exited = car.f(m1c, m2c, true);
         }
+      } else {
+        double numRotationsNeeded = until / 250;
 
-        delay(1000);
+        for (int i = 0; i < ceil(numRotationsNeeded); i++) {
+          m1c = 0;
+          m2c = 0;
+
+          bool exited = false;
+          while (!exited) {
+            exited = car.f(m1c, m2c, false);
+          }
+
+          delay(1000);
+        }
       }
     } else if (instruction[0] == 'l') {
       bool exited = false;

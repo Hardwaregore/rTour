@@ -176,7 +176,7 @@ void loop() {
       // Set until var
       sscanf(instruction.c_str(), "f %d %d", &until, &speed);
 
-      if (until == 170) {
+      if (until == 420) {
         if (debugMode) {
           Serial.println("\"" + instruction + "\" is a special instruction! Used " + String(until) + " as until value");
         }
@@ -186,9 +186,9 @@ void loop() {
           exited = car.f(m1c, m2c, true);
         }
       } else {
-        double numRotationsNeeded = until / 250;
+        double numRotationsNeeded = until / 500;
         if (debugMode) {
-          Serial.println("Will more forwards 250mm " + String(numRotationsNeeded) + " times");
+          Serial.println("Used " + String(until) + " as the until value. Will more forwards 500mm " + String(numRotationsNeeded) + " times");
         }
 
         for (int i = 0; i < ceil(numRotationsNeeded); i++) {

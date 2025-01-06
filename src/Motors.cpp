@@ -161,42 +161,76 @@ bool Motors::r(int numRotationsM1, int numRotationsM2) {
     }
 }
 
-bool Motors::b (long m1c, long m2c) {
+bool Motors::b (long m1c, long m2c, bool special) {
     int avg = (m1c + m2c) / 2;
     double distance = avg / (2750.0);
     double specialUntil = 0.7;
-    if (debugMode) {
+    double until = 2.5;
+    if (debugMode && verboseOutput) {
         Serial.println("Average: " + String(avg) + " (M1: " + String(m1c) + ", M2: " + String(m2c) + ")");
     }
 
-    if (distance >= (specialUntil)) {
-        // Set Motor 1
-        digitalWrite(pinM1p1, LOW);
-        digitalWrite(pinM1p2, HIGH);
-        analogWrite(pinM1spd, 0);
+    if (special) {
+        if (distance >= (specialUntil)) {
+            // Set Motor 1
+            digitalWrite(pinM1p1, LOW);
+            digitalWrite(pinM1p2, HIGH);
+            analogWrite(pinM1spd, 0);
 
-        // Set Motor 2
-        digitalWrite(pinM2p1, LOW);
-        digitalWrite(pinM2p2, HIGH);
-        analogWrite(pinM2spd, 0);
+            // Set Motor 2
+            digitalWrite(pinM2p1, LOW);
+            digitalWrite(pinM2p2, HIGH);
+            analogWrite(pinM2spd, 0);
 
-        return true;
+            return true;
 
+        } else {
+
+            // Set Motor 2
+
+            digitalWrite(pinM2p1, LOW);
+            digitalWrite(pinM2p2, HIGH);
+            analogWrite(pinM2spd, 255 - 3);
+
+            // delay(100);
+
+            // Set Motor 1
+            digitalWrite(pinM1p1, LOW);
+            digitalWrite(pinM1p2, HIGH);
+            analogWrite(pinM1spd, 250);
+
+            return false;
+        }
     } else {
+        if (distance >= (until)) {
+            // Set Motor 1
+            digitalWrite(pinM1p1, LOW);
+            digitalWrite(pinM1p2, HIGH);
+            analogWrite(pinM1spd, 0);
 
-        // Set Motor 2
+            // Set Motor 2
+            digitalWrite(pinM2p1, LOW);
+            digitalWrite(pinM2p2, HIGH);
+            analogWrite(pinM2spd, 0);
 
-        digitalWrite(pinM2p1, LOW);
-        digitalWrite(pinM2p2, HIGH);
-        analogWrite(pinM2spd, 255);
+            return true;
 
-        // delay(100);
+        } else {
 
-        // Set Motor 1
-        digitalWrite(pinM1p1, LOW);
-        digitalWrite(pinM1p2, HIGH);
-        analogWrite(pinM1spd, 250);
+            // Set Motor 2
 
-        return false;
-    }
+            digitalWrite(pinM2p1, LOW);
+            digitalWrite(pinM2p2, HIGH);
+            analogWrite(pinM2spd, 255 - 3);
+
+            // delay(100);
+
+            // Set Motor 1
+            digitalWrite(pinM1p1, LOW);
+            digitalWrite(pinM1p2, HIGH);
+            analogWrite(pinM1spd, 250);
+
+            return false;
+        }
+    }    
 }

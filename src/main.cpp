@@ -171,10 +171,9 @@ void loop() {
     if (instruction[0] == 'f') {
       // Define variables
       int until;
-      int speed;
 
       // Set until var
-      sscanf(instruction.c_str(), "f %d %d", &until, &speed);
+      sscanf(instruction.c_str(), "f %d", &until);
 
       if (until == 420) {
         if (debugMode) {
@@ -220,13 +219,38 @@ void loop() {
         exited = !car.r(m1c, m2c);
       }
     } else if (instruction[0] == 'b') {
-      if (debugMode) {
-        Serial.println("\"" + instruction + "\" is a special instruction! Used " + String(170) + " as until value");
-      }
+      // Define variables
+      int until;
 
-      bool exited = false;
-      while (!exited) {
-        exited = car.b(m1c, m2c);
+      // Set until var
+      sscanf(instruction.c_str(), "b %d", &until);
+
+      if (until == 170) {
+        if (debugMode) {
+          Serial.println("\"" + instruction + "\" is a special instruction! Used " + String(until) + " as until value");
+        }
+
+        bool exited = false;
+        while (!exited) {
+          exited = car.b(m1c, m2c, true);
+        }
+      } else {
+        double numRotationsNeeded = until / 500;
+        if (debugMode) {
+          Serial.println("Used " + String(until) + " as the until value. Will more backwards 500mm " + String(numRotationsNeeded) + " times");
+        }
+
+        for (int i = 0; i < ceil(numRotationsNeeded); i++) {
+          m1c = 0;
+          m2c = 0;
+
+          bool exited = false;
+          while (!exited) {
+            exited = car.b(m1c, m2c, false);
+          }
+
+          delay(1000);
+        }
       }
     } else if (instruction[0] == 'e') {
       while (true) {
